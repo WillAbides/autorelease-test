@@ -1,4 +1,4 @@
-package goprojecttmpl
+package autoreleasetest
 
 import (
 	"testing"

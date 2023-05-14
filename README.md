@@ -1,1 +1,1 @@
-# goproject-tmpl
+# autorelease-test
