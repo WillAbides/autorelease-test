@@ -17,8 +17,6 @@ GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-"WillAbides/autorelease-test"}"
 
 NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --create-tag --allow-first-release)"
 
-echo "NEXT_VERSION: $NEXT_VERSION"
-
 TAG="v$NEXT_VERSION"
 
 bin/gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag
