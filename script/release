@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+CDPATH="" cd -- "$(dirname -- "$0")/.."
+
+[ -n "$GITHUB_TOKEN" ] || {
+  echo GITHUB_TOKEN must be set
+  exit 1
+}
+
+script/bindown -q install semver-next
+script/bindown -q install gh
+
+GITHUB_SHA="${GITHUB_SHA:-"$(git rev-parse HEAD)"}"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-"WillAbides/autorelease-test"}"
+
+NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --create-tag --allow-first-release)"
+
+echo "NEXT_VERSION: $NEXT_VERSION"
+
+TAG="v$NEXT_VERSION"
+
+bin/gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag
