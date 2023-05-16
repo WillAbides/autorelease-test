@@ -20,4 +20,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: bin/semver-next "$GITHUB_REPOSITORY" --check-pr "$PR_NUMBER" --require-labels
+        run: bin/semver-next "$GITHUB_REPOSITORY" --check-pr "$PR_NUMBER"
