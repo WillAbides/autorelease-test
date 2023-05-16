@@ -16,7 +16,7 @@ GITHUB_SHA="${GITHUB_SHA:-"$(git rev-parse HEAD)"}"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-"WillAbides/autorelease-test"}"
 
 set +e
-NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --allow-first-release --require-change --create-tag)"
+NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --allow-first-release --require-change)"
 exit_code="$?"
 set -e
 
@@ -34,4 +34,6 @@ esac
 
 TAG="v$NEXT_VERSION"
 
-bin/gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag
+echo "TAG=$TAG"
+
+#bin/gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag
