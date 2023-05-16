@@ -15,7 +15,7 @@ script/bindown -q install gh
 GITHUB_SHA="${GITHUB_SHA:-"$(git rev-parse HEAD)"}"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-"WillAbides/autorelease-test"}"
 
-NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --create-tag --allow-first-release --require-change)"
+NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --create-tag --allow-first-release)"
 
 TAG="v$NEXT_VERSION"
 
