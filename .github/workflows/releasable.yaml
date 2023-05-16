@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+      - run: script/bindown install -q semver-next
       - name: check releasable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          script/bindown install -q semver-next
-          bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: bin/semver-next "$GITHUB_REPOSITORY" --check-pr "$PR_NUMBER"
