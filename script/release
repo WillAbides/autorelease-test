@@ -9,31 +9,36 @@ CDPATH="" cd -- "$(dirname -- "$0")/.."
   exit 1
 }
 
+if [ "$(git rev-parse --is-shallow-repository)" != "false" ]; then
+  echo "script/release cannot be run on a shallow clone"
+  exit 1
+fi
+
 script/bindown -q install semver-next
 script/bindown -q install gh
+
+git fetch --tags
+
+GITHUB_SHA="${GITHUB_SHA:-"$(git rev-parse HEAD)"}"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-"WillAbides/semver-next"}"
 
 GITHUB_SHA="${GITHUB_SHA:-"$(git rev-parse HEAD)"}"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-"WillAbides/autorelease-test"}"
 
-set +e
-NEXT_VERSION="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" --require-labels --allow-first-release --require-change)"
-exit_code="$?"
-set -e
+PREV_REF="$(git describe --abbrev=0 --match='v[0-9]*.[0-9]*.[0-9]*' 2>/dev/null || true)"
+PREV_VERSION="$PREV_REF"
+if [ -z "$PREV_REF" ]; then
+  PREV_REF="$(git rev-list --max-parents=0 HEAD)"
+  PREV_VERSION="0.0.0"
+fi
 
-case "$exit_code" in
-  0)
-    ;;
-  10)
-    echo "No changes since last release"
-    exit 0
-    ;;
-  *)
-    exit "$exit_code"
-    ;;
-esac
+RES="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" -p "$PREV_REF" -v "$PREV_VERSION" --json)"
+NEXT_VERSION="$(echo "$RES" | jq -r .next_version)"
+CHANGE_LEVEL="$(echo "$RES" | jq -r .change_level)"
 
-TAG="v$NEXT_VERSION"
+if [ "$CHANGE_LEVEL" = "no change" ]; then
+  echo "No changes since last release"
+  exit 0
+fi
 
-echo "TAG=$TAG"
-
-#bin/gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag
+bin/gh release create "v$NEXT_VERSION" --title "v$NEXT_VERSION" --generate-notes
