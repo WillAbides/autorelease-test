@@ -16,6 +16,7 @@ fi
 
 script/bindown -q install semver-next
 script/bindown -q install gh
+script/bindown -q install goreleaser
 
 git fetch --tags
 
@@ -42,3 +43,4 @@ if [ "$CHANGE_LEVEL" = "no change" ]; then
 fi
 
 bin/gh release create "v$NEXT_VERSION" --title "v$NEXT_VERSION" --generate-notes
+bin/goreleaser release
