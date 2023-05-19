@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -ex
 
@@ -16,6 +16,7 @@ fi
 
 script/bindown -q install semver-next
 script/bindown -q install gh
+script/bindown -q install jq
 
 git fetch --tags
 
@@ -30,8 +31,8 @@ if [ -z "$PREV_REF" ]; then
 fi
 
 RES="$(bin/semver-next "$GITHUB_REPOSITORY" -r "$GITHUB_SHA" -p "$PREV_REF" -v "$PREV_VERSION" --json)"
-NEXT_VERSION="$(echo "$RES" | jq -r .next_version)"
-CHANGE_LEVEL="$(echo "$RES" | jq -r .change_level)"
+NEXT_VERSION="$(echo "$RES" | bin/jq -r .next_version)"
+CHANGE_LEVEL="$(echo "$RES" | bin/jq -r .change_level)"
 
 if [ "$CHANGE_LEVEL" = "no change" ]; then
   echo "No changes since last release"
@@ -67,12 +68,10 @@ script/bindown -q install jq
 git tag -a -m "v$NEXT_VERSION" "v$NEXT_VERSION"
 git push origin "v$NEXT_VERSION"
 
-#NOTES="$(
-#  bin/gh api '/repos/{owner}/{repo}/releases/generate-notes' \
-#    -f tag_name="v$NEXT_VERSION" \
-#    -f target_commitish="$GITHUB_SHA" | bin/jq -r .body
-#)"
+NOTES="$(
+  bin/gh api '/repos/{owner}/{repo}/releases/generate-notes' \
+    -f tag_name="v$NEXT_VERSION" \
+    -f target_commitish="$GITHUB_SHA" | bin/jq -r .body
+)"
 
-NOTES="testing"
-
-bin/goreleaser release --release-notes "$NOTES"
+bin/goreleaser release --release-notes < <(echo "$NOTES")
