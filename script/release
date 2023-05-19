@@ -65,4 +65,4 @@ git fetch --tags
 
 script/bindown -q install goreleaser
 
-GITHUB_TOKEN="$GITHUB_TOKEN" bin/goreleaser release
+GITHUB_TOKEN="$GITHUB_TOKEN" bin/goreleaser release --debug
