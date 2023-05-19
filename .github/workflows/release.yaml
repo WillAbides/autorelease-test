@@ -8,7 +8,6 @@ jobs:
   release:
     # only run if the repository is WillAbides/autorelease-test
     if: github.repository == 'WillAbides/autorelease-test'
-    permissions: write-all
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
