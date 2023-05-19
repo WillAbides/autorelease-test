@@ -74,4 +74,4 @@ NOTES="$(
     -f target_commitish="$GITHUB_SHA" | bin/jq -r .body
 )"
 
-bin/goreleaser release --release-notes < <(echo "$NOTES")
+bin/goreleaser release --release-notes <(echo "$NOTES")
