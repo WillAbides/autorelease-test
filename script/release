@@ -65,4 +65,4 @@ git fetch --tags
 
 script/bindown -q install goreleaser
 
-bin/goreleaser release --debug
+bin/goreleaser release
