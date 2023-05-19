@@ -65,6 +65,7 @@ script/bindown -q install goreleaser
 script/bindown -q install jq
 
 git tag -a -m "v$NEXT_VERSION" "v$NEXT_VERSION"
+git push origin "v$NEXT_VERSION"
 
 NOTES="$(
   bin/gh api '/repos/{owner}/{repo}/releases/generate-notes' \
