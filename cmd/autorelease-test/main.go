@@ -5,5 +5,5 @@ import "fmt"
 var version = "unknown"
 
 func main() {
-	fmt.Println("version:", version)
+	fmt.Println("hello from version", version)
 }
