@@ -23,8 +23,8 @@ jobs:
           path: |
             ${{ steps.setup-go.outputs.GOCACHE }}
             ${{ steps.setup-go.outputs.GOMODCACHE }}
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+          key: ${{ runner.os }}-go2-${{ hashFiles('**/go.sum') }}
+          restore-keys: ${{ runner.os }}-go2-
       - run: script/generate --check
       - run: script/test
       - run: script/lint
