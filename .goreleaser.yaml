@@ -8,9 +8,6 @@ builds:
     ldflags:
       - -s -w -X main.version={{.Version}}
     main: ./cmd/autorelease-test
-archives:
-  - id: tar.gz
-    format: tar.gz
 checksum:
   name_template: 'checksums.txt'
 snapshot:
