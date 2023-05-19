@@ -56,22 +56,13 @@ else
   fi
 fi
 
-# if ./.goreleaser.yaml doesn't exist, run gh release create and exit
-if [ ! -f ".goreleaser.yaml" ]; then
-  bin/gh release create "v$NEXT_VERSION" -t "v$NEXT_VERSION" --generate-notes
-  exit 0
-fi
+bin/gh release create "v$NEXT_VERSION" -t "v$NEXT_VERSION" --generate-notes
+
+# If there's no .goreleaser.yaml, there's nothing left to do.
+[ -f ".goreleaser.yaml" ] || exit 0
+
+git fetch --tags
 
 script/bindown -q install goreleaser
-script/bindown -q install jq
 
-git tag -a -m "v$NEXT_VERSION" "v$NEXT_VERSION"
-git push origin "v$NEXT_VERSION"
-
-NOTES="$(
-  bin/gh api '/repos/{owner}/{repo}/releases/generate-notes' \
-    -f tag_name="v$NEXT_VERSION" \
-    -f target_commitish="$GITHUB_SHA" | bin/jq -r .body
-)"
-
-bin/goreleaser release --release-notes <(echo "$NOTES")
+bin/goreleaser release
