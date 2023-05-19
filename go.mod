@@ -1,4 +1,4 @@
-module github.com/willabides/autorelease-test
+module github.com/willabides/autorelease-test/v2
 
 go 1.19
 
