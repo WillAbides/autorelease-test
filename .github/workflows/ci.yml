@@ -49,10 +49,6 @@ jobs:
             ${{ steps.setup-go.outputs.GOMODCACHE }}
           key: ${{ runner.os }}-release-${{ hashFiles('**/go.sum') }}-${{ hashFiles('script/**') }}-${{ hashFiles('.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-release-
-      - name: git config
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
       - run: script/release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
