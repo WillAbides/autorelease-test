@@ -5,9 +5,14 @@ set -e
 
 CDPATH="" cd -- "$(dirname -- "$0")/.."
 
-script/bindown -q install goreleaser
-
 script/test
+
+# In CI, only run the rest on Linux. Assuming RUNNER_OS is only set by GitHub Actions.
+if [ -n "$RUNNER_OS" ] && [ "$RUNNER_OS" != "Linux" ]; then
+  exit 0
+fi
+
 script/lint
 script/generate --check
+script/bindown -q install goreleaser
 bin/goreleaser build --snapshot --clean
