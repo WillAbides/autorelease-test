@@ -36,5 +36,3 @@ go mod tidy
 if [ -f script/update-docs ]; then
   ./script/update-docs
 fi
-
-echo food >> README.md
