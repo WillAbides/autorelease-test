@@ -35,6 +35,22 @@ jobs:
 
       # release on pushes to main
       - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: script/release
+        id: release
+        uses: WillAbides/semver-release-action@v1.2.0
+        with:
+          create_release: "true"
+          validate_version: |
+            set -e
+            MODULE_VERSION_SUFFIX="$(go list -m | grep -o '/v[0-9][0-9]*$' || true)"
+            MAJOR_VERSION="${RELEASE_VERSION%%.*}"
+            if [ "$MAJOR_VERSION" -ge 2 ] && [ "$MODULE_VERSION_SUFFIX" != "/v$MAJOR_VERSION" ]; then
+              echo "module version suffix must be /v$MAJOR_VERSION"
+              exit 1
+            elif [ "$MAJOR_VERSION" -lt 2 ] && [ -n "$MODULE_VERSION_SUFFIX" ]; then
+              echo "Module name must not end with /v[0-9][0-9]*"
+              exit 1
+            fi
+          post_release_hook: |
+            set -e
+            script/bindown install goreleaser
+            bin/goreleaser release --clean
