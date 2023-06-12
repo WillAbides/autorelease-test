@@ -42,6 +42,8 @@ jobs:
           validate_go_module: go.mod
       - if: steps.release.outputs.created_release == 'true'
         name: goreleaser
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           script/bindown install goreleaser
           bin/goreleaser release --clean
