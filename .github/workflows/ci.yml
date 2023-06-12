@@ -40,7 +40,7 @@ jobs:
         with:
           create_release: "true"
           validate_go_module: go.mod
-      - if: steps.release.outputs.release_created == 'true'
+      - if: steps.release.outputs.created_release == 'true'
         name: goreleaser
         run: |
           script/bindown install goreleaser
