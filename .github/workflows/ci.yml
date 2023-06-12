@@ -36,7 +36,7 @@ jobs:
       # release on pushes to main
       - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: release
-        uses: WillAbides/semver-release-action@v2.2.1
+        uses: WillAbides/semver-release-action@v2.2.2
         with:
           create_release: "true"
           validate_go_module: go.mod
