@@ -10,8 +10,13 @@ jobs:
   cibuild:
     name: cibuild
     runs-on: ubuntu-22.04
+    permissions:
+      # needed for release
+      contents: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
@@ -24,19 +29,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
       - run: script/cibuild
-  release:
-    runs-on: ubuntu-22.04
-    needs: cibuild
-    permissions:
-      # needed for release
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # release-train requires the full git history
-          fetch-depth: 0
-      - id: release
-        uses: WillAbides/release-train@v3.0.2
+      - uses: WillAbides/release-train@v3.0.2
         with:
           create-release: true
           release-refs: main
