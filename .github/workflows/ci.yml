@@ -1,6 +1,9 @@
 name: ci
 on:
   push:
+    branches: [ main ]
+  pull_request:
+    types: [ synchronize, opened, reopened, labeled, unlabeled ]
   workflow_dispatch:
 jobs:
   cibuild:
@@ -28,6 +31,4 @@ jobs:
       - uses: WillAbides/release-train@v3.0.2
         with:
           create-release: true
-          release-refs: main
-          debug: true
           pre-release-hook: script/pre-release
