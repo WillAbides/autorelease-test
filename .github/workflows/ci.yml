@@ -29,4 +29,5 @@ jobs:
         with:
           create-release: true
           release-refs: main
+          debug: true
           pre-release-hook: script/pre-release
