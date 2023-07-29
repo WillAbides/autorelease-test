@@ -1,9 +1,17 @@
 package main
 
-import "fmt"
+import (
+	_ "embed"
+	"fmt"
+	"strings"
+)
 
-var version = "unknown"
+var buildVersion = "unknown"
+
+//go:embed version.txt
+var versionTxt string
 
 func main() {
-	fmt.Println("hello from version", version)
+	fmt.Println("hello from version", buildVersion)
+	fmt.Println("version.txt:", strings.TrimSpace(versionTxt))
 }
