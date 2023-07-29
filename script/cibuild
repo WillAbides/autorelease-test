@@ -14,5 +14,3 @@ fi
 
 script/lint
 script/generate --check
-script/bindown -q install goreleaser
-bin/goreleaser build --snapshot --clean
