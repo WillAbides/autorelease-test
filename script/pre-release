@@ -20,4 +20,3 @@ script/bindown -q install goreleaser
 bin/goreleaser release --clean --skip-publish
 [ -n "$ASSETS_DIR" ] || exit 0
 cp dist/checksums.txt dist/autorelease-test_*.tar.gz "$ASSETS_DIR"
-exit 1
