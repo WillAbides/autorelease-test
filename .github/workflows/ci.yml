@@ -28,7 +28,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
       - run: script/cibuild
-      - uses: WillAbides/release-train@v3.0.2
+      - uses: WillAbides/release-train@v3.1.0
         with:
           create-release: true
           pre-release-hook: script/pre-release
