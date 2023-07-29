@@ -36,7 +36,7 @@ jobs:
           # release-train requires the full git history
           fetch-depth: 0
       - id: release
-        uses: WillAbides/release-train@v3.0.0
+        uses: WillAbides/release-train@v3.0.1
         with:
           create-release: true
           release-refs: main
