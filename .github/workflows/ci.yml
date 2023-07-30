@@ -33,7 +33,7 @@ jobs:
             ${{ steps.setup-go.outputs.GOMODCACHE }}
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
-#      - run: script/cibuild
+      - run: script/cibuild
       - name: config
         run: |
           git config --local user.name '${{ github.actor }}'
@@ -48,7 +48,7 @@ jobs:
       - name: echo release-train output as json
         run: |
           echo "${{ toJson(steps.release-train.outputs) }}"
-      - if: steps.release-train.outputs.pre_release_hook_aborted == 'true'
+      - if: steps.release-train.outputs.pre-release-hook-aborted == 'true'
         name: create release pr
         id: create-release-pr
         # v5.0.1
@@ -56,12 +56,12 @@ jobs:
         with:
           token: "${{ steps.generate-token.outputs.token }}"
           add-paths: "cmd/autorelease-test/version.txt"
-          commit-message: "prepare to release ${{ steps.release-train.outputs.release_tag }}"
+          commit-message: "prepare to release ${{ steps.release-train.outputs.release-tag }}"
           branch: "prepare-release"
           delete-branch: true
-          title: "prepare to release ${{ steps.release-train.outputs.release_tag }}"
-          body: "prepare to release ${{ steps.release-train.outputs.release_tag }}"
-          labels: "semver:nochange"
+          title: "prepare to release ${{ steps.release-train.outputs.release-tag }}"
+          body: "prepare to release ${{ steps.release-train.outputs.release-tag }}"
+          labels: "semver:none"
       - if: steps.create-release-pr.outputs.pull-request-number
         name: auto-merge release pr
         env:
