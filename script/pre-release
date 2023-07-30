@@ -15,15 +15,9 @@ if git rev-parse "$RELEASE_TAG" >/dev/null 2>&1; then
   exit 0
 fi
 
-git diff --exit-code --quiet --cached || {
-  echo "error: staged changes exist"
-  exit 1
-}
-
 echo "$RELEASE_TAG" > cmd/autorelease-test/version.txt
-git add cmd/autorelease-test/version.txt
+git diff --quiet cmd/autorelease-test/version.txt || exit 10
 
-git commit -m "prepare release $RELEASE_TAG" -q
 git tag "$RELEASE_TAG"
 
 script/bindown -q install goreleaser
