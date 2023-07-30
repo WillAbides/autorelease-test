@@ -33,7 +33,7 @@ jobs:
             ${{ steps.setup-go.outputs.GOMODCACHE }}
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
-      - run: script/cibuild
+#      - run: script/cibuild
       - name: config
         run: |
           git config --local user.name '${{ github.actor }}'
@@ -42,8 +42,7 @@ jobs:
         id: release-train
         with:
           create-release: true
-          pre-release-hook: |
-           script/pre-release 2>&1
+          pre-release-hook: script/pre-release
           github-token: ${{ steps.generate-token.outputs.token }}
           debug: true
       - name: echo release-train output as json
