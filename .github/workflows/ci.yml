@@ -33,19 +33,13 @@ jobs:
             ${{ steps.setup-go.outputs.GOMODCACHE }}
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
-#      - run: script/cibuild
+      - run: script/cibuild
       - name: config
         run: |
           git config --local user.name '${{ github.actor }}'
           git config --local user.email '${{ github.actor }}@users.noreply.github.com'
-          git remote set-url origin https://${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
-          git remote -v
-          git commit --allow-empty -m "testing push"
-          git push origin main
-#      - uses: WillAbides/release-train@v3.1.0
-#        env:
-#          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-#        with:
-#          create-release: true
-#          pre-release-hook: script/pre-release
-#          github-token: ${{ steps.generate-token.outputs.token }}
+      - uses: WillAbides/release-train@v3.1.0
+        with:
+          create-release: true
+          pre-release-hook: script/pre-release
+          github-token: ${{ steps.generate-token.outputs.token }}
