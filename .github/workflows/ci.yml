@@ -27,8 +27,18 @@ jobs:
             ${{ steps.setup-go.outputs.GOMODCACHE }}
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
+      - uses: tibdex/github-app-token@v1.8.0
+        id: generate-token
+        with:
+          app_id: ${{ secrets.RELEASER_APP_ID }}
+          private_key: ${{ secrets.RELEASER_APP_KEY }}
       - run: script/cibuild
+      - name: config
+        run: |
+          git config --local user.name '${{ github.actor }}'
+          git config --local user.email '${{ github.actor }}@users.noreply.github.com'
       - uses: WillAbides/release-train@v3.1.0
         with:
           create-release: true
           pre-release-hook: script/pre-release
+          github-token: ${{ steps.generate-token.outputs.token }}
