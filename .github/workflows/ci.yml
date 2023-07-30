@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ steps.generate-token.outputs.token }}
+#          token: ${{ steps.generate-token.outputs.token }}
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
@@ -39,7 +39,27 @@ jobs:
           git config --local user.name '${{ github.actor }}'
           git config --local user.email '${{ github.actor }}@users.noreply.github.com'
       - uses: WillAbides/release-train@v3.1.0
+        id: release-train
         with:
           create-release: true
           pre-release-hook: script/pre-release
           github-token: ${{ steps.generate-token.outputs.token }}
+      - if: steps.release-train.outputs.pre_release_hook_aborted == 'true'
+        name: create release pr
+        id: create-release-pr
+        # v5.0.1
+        uses: peter-evans/create-pull-request@284f54f989303d2699d373481a0cfa13ad5a6666
+        with:
+          token: "${{ steps.generate-token.outputs.token }}"
+          add-paths: ".bindown.yaml"
+          commit-message: "prepare to release ${{ steps.release-train.outputs.release_tag }}"
+          branch: "prepare-release"
+          delete-branch: true
+          title: "prepare to release ${{ steps.release-train.outputs.release_tag }}"
+          body: "prepare to release ${{ steps.release-train.outputs.release_tag }}"
+          labels: "semver:nochange"
+      - if: steps.create-release-pr.outputs.pull-request-number
+        name: auto-merge release pr
+        env:
+          GH_TOKEN: "${{ steps.generate-token.outputs.token }}"
+        run: gh pr merge --merge --auto ${{ steps.create-release-pr.outputs.pull-request-number }}
