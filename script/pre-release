@@ -17,14 +17,23 @@ fi
 
 echo "$RELEASE_TAG" > cmd/autorelease-test/version.txt
 
+if ! git diff --quiet cmd/autorelease-test/version.txt; then
+  DIRTY=1
+fi
+
 git tag "$RELEASE_TAG"
 
 script/bindown -q install goreleaser
-bin/goreleaser release --clean --skip-publish
+if [ -n "$DIRTY" ]; then
+  bin/goreleaser release --clean --skip-publish --skip-validate
+else
+  bin/goreleaser release --clean --skip-publish
+fi
+
 [ -n "$ASSETS_DIR" ] || exit 0
 cp dist/checksums.txt dist/autorelease-test_*.tar.gz "$ASSETS_DIR"
 
-if ! git diff --quiet cmd/autorelease-test/version.txt; then
-  echo "cmd/autorelease-test/version.txt is dirty"
+if [ -n "$DIRTY" ]; then
+  echo "abort"
   exit 10
 fi
