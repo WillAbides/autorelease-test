@@ -37,6 +37,8 @@ jobs:
         run: |
           git config --local user.name '${{ github.actor }}'
           git config --local user.email '${{ github.actor }}@users.noreply.github.com'
+          git remote set-url origin https://${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
+          git remote -v
       - uses: WillAbides/release-train@v3.1.0
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
