@@ -45,7 +45,7 @@ jobs:
       - name: echo release-train output as json
         run: |
           echo "${{ toJson(steps.release-train.outputs) }}"
-      - if: steps.release-train.outputs.pre-release-hook-aborted == 'true'
+      - if: github.event_name == 'push' && steps.release-train.outputs.pre-release-hook-aborted == 'true'
         name: create release pr
         id: create-release-pr
         # v5.0.1
