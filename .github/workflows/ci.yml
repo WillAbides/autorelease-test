@@ -21,7 +21,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-#          token: ${{ steps.generate-token.outputs.token }}
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
@@ -43,8 +42,6 @@ jobs:
         with:
           create-release: true
           pre-release-hook: script/pre-release
-          github-token: ${{ steps.generate-token.outputs.token }}
-          debug: true
       - name: echo release-train output as json
         run: |
           echo "${{ toJson(steps.release-train.outputs) }}"
@@ -54,7 +51,7 @@ jobs:
         # v5.0.1
         uses: peter-evans/create-pull-request@284f54f989303d2699d373481a0cfa13ad5a6666
         with:
-          token: "${{ steps.generate-token.outputs.token }}"
+#          token: "${{ steps.generate-token.outputs.token }}"
           add-paths: "cmd/autorelease-test/version.txt"
           commit-message: "prepare to release ${{ steps.release-train.outputs.release-tag }}"
           branch: "prepare-release"
