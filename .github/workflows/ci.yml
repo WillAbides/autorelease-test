@@ -42,7 +42,8 @@ jobs:
         id: release-train
         with:
           create-release: true
-          pre-release-hook: script/pre-release
+          pre-release-hook: |
+           script/pre-release 2>&1
           github-token: ${{ steps.generate-token.outputs.token }}
           debug: true
       - name: echo release-train output as json
