@@ -44,6 +44,10 @@ jobs:
           create-release: true
           pre-release-hook: script/pre-release
           github-token: ${{ steps.generate-token.outputs.token }}
+          debug: true
+      - name: echo release-train output as json
+        run: |
+          echo "${{ toJson(steps.release-train.outputs) }}"
       - if: steps.release-train.outputs.pre_release_hook_aborted == 'true'
         name: create release pr
         id: create-release-pr
