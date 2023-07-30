@@ -13,9 +13,15 @@ jobs:
       # needed for release
       contents: write
     steps:
+      - uses: tibdex/github-app-token@v1.8.0
+        id: generate-token
+        with:
+          app_id: ${{ secrets.RELEASER_APP_ID }}
+          private_key: ${{ secrets.RELEASER_APP_KEY }}
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ steps.generate-token.outputs.token }}
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
@@ -27,11 +33,6 @@ jobs:
             ${{ steps.setup-go.outputs.GOMODCACHE }}
           key: ${{ runner.os }}-go-${{ hashFiles('go.*', '.github/workflows/ci.yaml', 'script/*', '.bindown.yaml', '.goreleaser.yaml') }}
           restore-keys: ${{ runner.os }}-go-
-      - uses: tibdex/github-app-token@v1.8.0
-        id: generate-token
-        with:
-          app_id: ${{ secrets.RELEASER_APP_ID }}
-          private_key: ${{ secrets.RELEASER_APP_KEY }}
 #      - run: script/cibuild
       - name: config
         run: |
